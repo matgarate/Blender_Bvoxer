@@ -1,0 +1,22 @@
+These tutorials and their content were developed with the help (both directly and indirectly) of all these people.
+Here I include the respective acknowledgements and also links to the websites that can be useful to learn more of scientific data visualization in blender.
+
+
+Download Blender from:						www.blender.org
+To install python and numpy go to:				http://www.scipy.org/install.html
+To download the Protoplanetary Disk Simulation code go to:	http://fargo.in2p3.fr/
+
+
+Other scientists which have done scientific visualization using Blender are:
+Matthias Meschede :		http://pythology.blogspot.com
+Dr. Brian Kent:			http://www.cv.nrao.edu/~bkent/blender/						
+Dr. Jill Naiman:		http://www.astroblend.com/							
+
+
+Special thanks to:
+Dr. Jorge Cuadra from Pontificia Universidad Católica de Chile, who developed the Stellar Winds simulations made with Gadget-2 in Geryon*.
+Dr. Sebastián Perez from Universidad de Chile, who developed the Protoplanetary Disk simulation with Fargo3D in Belka**.
+Dr. Pablo-Benitez Llambay (main developer of Fargo3D) Universidad Nacional de Córdoba, who collaborated in the development of the bvoxer_Fargo3D code.
+
+*The Geryon/Geryon2 cluster housed at the Centro de Astro-Ingenieria UC was used for (part) the calculations performed in this work. The BASAL PFB-06 CATA, Anillo ACT-86, FONDEQUIP AIC-57, and QUIMAL 130008 provided funding for several improvements to the Geryon/Geryon2 cluster.
+**These simulations were performed in the Belka GPU cluster by S. Perez at the Protoplanetary Diisk Millennium Nucleus, commissioned thanks to a FONDEQUIP grant."   
