@@ -13,7 +13,7 @@ def TripleSine(x,y,z):
 
 def CustomFunction(x,y,z):
 	#Replace the following line with CustomData=YourFunction.
-	CustomData=np.cos(x)+ np.cos(y) + np.cos(z)
+	CustomData=np.sin(x)+ np.sin(y) + np.sin(z)
 	return float(CustomData)
 
 ##############################################
