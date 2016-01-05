@@ -62,8 +62,6 @@ x,y,z= x.astype(int), y.astype(int), z.astype(int)
 
 if logvalues:
 	data=np.log10(data)
-data= data - np.min(data)
-data=data/np.max(data)
 
 
 num=data.size 				#Get the lenght of the data array
@@ -80,6 +78,10 @@ for i in range(num):
 
 point_count[np.where(point_count<1)[0]]=1	#To avoid divisions by zero
 vdata=np.divide(vdata,point_count)		#Normalization to keep vdata values between 0-1
+
+
+vdata= vdata - np.min(vdata)
+vdata=vdata/np.max(vdata)
 
 
 #Header of the blender voxel file. This is how blender knows what are the dimensions of the data cube.
