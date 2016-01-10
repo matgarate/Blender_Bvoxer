@@ -58,7 +58,7 @@ y= y * ny/(max_y-min_y)
 z= z * nz/(max_z-min_z)
 
 x,y,z= x.astype(int), y.astype(int), z.astype(int)
-#Normalize the data to be between 0-1
+
 
 if logvalues:
 	data=np.log10(data)
@@ -72,14 +72,14 @@ point_count= np.zeros(nx*ny*nz)		#Array where we count how main particles are in
 #Here we fill the vdata array and count the particles
 for i in range(num):
 	xx,yy,zz= x[i], y[i], z[i]
-	vdata[xx+yy*nx+zz*nx*ny]+= data[i]
-	point_count[xx+yy*nx+zz*nx*ny]+=1
+	vdata[xx+yy*nx+zz*nx*ny]+= data[i]      #Add the density of the particle with index i at the position x[i], y[i], z[i]
+	point_count[xx+yy*nx+zz*nx*ny]+=1       #Keep count of the number of particles at the cell x[i],y[i],z[i]
 
 
 point_count[np.where(point_count<1)[0]]=1	#To avoid divisions by zero
-vdata=np.divide(vdata,point_count)		#Normalization to keep vdata values between 0-1
+vdata=np.divide(vdata,point_count)	        #Average each data cell by the number of particles	
 
-
+#Normalization to keep vdata values between 0-1
 vdata= vdata - np.min(vdata)
 vdata=vdata/np.max(vdata)
 
