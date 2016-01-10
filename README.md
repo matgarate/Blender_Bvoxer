@@ -1,7 +1,7 @@
 # Blender_Bvoxer
 Codes and blendfiles to use voxel data for scientific visualization in blender.
 
-In this repository are all the files used in the tutorial series: "Blender and Astronomy Tutorial. Using Voxels for 3D visualization".  
+In this repository are all the files used in the tutorial series: "Blender and Astronomy Tutorial. Using Voxel Data for 3D visualization".  
 The first video tutorial: "Understanding Blender Voxel Data", uses the folder called "Example".  
 The second video tutorial: "Basics of Blender for scientists", uses the folder "Basics".  
 The third video tutorial: "Reading Astronomical simulations data for Blender", uses the folders "SPH" and "GridArray"  
