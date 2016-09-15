@@ -1,1 +1,1 @@
-./bvoxer_Fargo3D -in gasdens637.dat -out gasdens637.bvox -ns 512 -nr 256 -nc 64 -vnx 500 -vny 500 -vnz 100 -logr -logv
+./bvoxer_Fargo3D -in gasdens637.dat -out gasdens637.bvox -ns 512 -nr 256 -nc 64 -vnx 500 -vny 500 -vnz 100 -logr -logv -tri
