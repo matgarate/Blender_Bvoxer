@@ -35,6 +35,11 @@ real *r;
 real *theta;
 real *phi;
 
+real *r_med;
+real *theta_med;
+real *phi_med;
+
+
 
 real trilinear_interpolation(real x0, real x1,
 			      real y0, real y1,
@@ -71,30 +76,36 @@ real trilinear_interpolation(real x0, real x1,
 real GetCartesianValue(real r_cell, real phi_cell, real theta_cell){
 //This function is returning the closest value in the data array to the real spherical coordinates.
   real value = 0;
-
   int i,j,k;
 
+  //For the values of j and k we use the midpoints of the spherical gridcells in the radial and colatitude directions.
+  //For the value of i we use the boundaries of the spherical gridcells in the azimuthal direction.
+  //This is in order to sample the complete azimuthal domain [-Pi,+Pi], instead of uncomplete midpoint domain [-Pi +dtheta/2, +Pi -dtheta/2]
+  //Since i is cyclic this does not alter the scale of the visualization.
+
   i = (int)((phi_cell-phi[0])/(phi[ns]-phi[0])*ns);
-  j = (int)((r_cell-r[0])/(r[nr]-r[0])*nr);
+  j = (int)((r_cell-r_med[0])/(r_med[nr-1]-r_med[0])*(nr-1));
 
   if(logscale)
-  	j = (int)(nr*log10(r_cell/r[0])/log10(r[nr]/r[0]));
-  k = (int)((theta_cell-theta[0])/(theta[nc]-theta[0])*nc);
+  	j = (int)((nr-1)*log10(r_cell/r_med[0])/log10(r_med[nr-1]/r_med[0]));
+  k = (int)((theta_cell-theta_med[0])/(theta_med[nc-1]-theta_med[0])*(nc-1));
 
-  if(j>=0 && k>=0 && i>=0 && j<nr && k<nc) {
 
+  if(j>=0 && k>=0 && i>=0 && j<nr-1 && k<nc-1 && i<ns) {
+  //For j we accept values between [0,nr-1)
+  //For k we accept values between [0,nc-1)
+  //For i we accept values between [0,ns) because it is cyclic.
     if(tri)
     {
         int ip=i+1;
         int jp=j+1;
         int kp=k+1;
 
+        //if ip = ns that means we are between the cell [ns-1] and the cell [0]
         if(ip>=ns) ip=ip-ns;
-        if(jp>=nr-1) jp=j;
-        if(kp>=nc-1) kp=k;
 
         //For these values you are using the midpoints.
-        //So go from i=0->ns-1  j=0->nr-1 k=0->nc-1, same for ip(cyclic),jp,kp
+        //j=[0,nr-2], jp=[1,nr-1]  k=[0,nc-2], kp=[1,nc-1], i=[0,ns-1], ip[1,ns->0]
         real v000=data[i+j*ns+k*ns*nr];
         real v100=data[ip+j*ns+k*ns*nr];
         real v110=data[ip+jp*ns+k*ns*nr];
@@ -104,10 +115,10 @@ real GetCartesianValue(real r_cell, real phi_cell, real theta_cell){
         real v111=data[ip+jp*ns+kp*ns*nr];
         real v011=data[i+jp*ns+kp*ns*nr];
 
-        //For here your are using the boundaries so i=0->ns-1  j=0->nr-1 k=0->nc-1, same for i+1,j+1,k+1
+        //Notice again that for the j, k coordinates we use the midpoints, while for the i coordinate we use the borders.
         value = trilinear_interpolation(phi[i],phi[i+1],
-                                        r[j],r[j+1],
-                                        theta[k],theta[k+1],
+                                        r_med[j],r_med[j+1],
+                                        theta_med[k],theta_med[k+1],
                                         v000,v100,v110,v010,
                                         v001,v101,v111,v011,
                                         phi_cell,r_cell,theta_cell);
@@ -144,6 +155,9 @@ void usage()
     fprintf(stderr,"[-logv] Output fargo field values in logscale.\n");
     fprintf(stderr,"[-tri] Use Trilinear Interpolation.\n");
 
+    fprintf(stderr,"[-min <float>] Customized minimum value for fargo field (on logscale if -logv was used).\n");
+    fprintf(stderr,"[-max <float>] Customized maximum value for fargo field (on logscale if -logv was used).\n");
+
 
     exit(0);
 }
@@ -164,6 +178,12 @@ int main(int argc, char **argv)
     FILE* fi;
     FILE* fo;
 
+
+    int Use_custom_max=FALSE;
+    int Use_custom_min=FALSE;
+
+    real custom_max;
+    real custom_min;
 
 
     if(argc==1) usage();
@@ -205,6 +225,20 @@ int main(int argc, char **argv)
 			nz = atoi(argv[i]);
 			++i;
 			}
+        else if (!strcmp(argv[i],"-max")) {
+			++i;
+			if (i >= argc) usage();
+			custom_max = atof(argv[i]);
+            Use_custom_max=TRUE;
+			++i;
+			}
+		else if (!strcmp(argv[i],"-min")) {
+			++i;
+			if (i >= argc) usage();
+			custom_min = atof(argv[i]);
+            Use_custom_min=TRUE;
+			++i;
+			}
 		else if (!strcmp(argv[i],"-in")) {
 			++i;
 			if (i >= argc) usage();
@@ -232,7 +266,6 @@ int main(int argc, char **argv)
         else usage();
     }
 
-
     //Initial min and max values. Ridiculously high and low to get the accurate min and max values.
     real min_value=1e30;
     real max_value=-1e30;
@@ -243,11 +276,6 @@ int main(int argc, char **argv)
     real *x;
     real *y;
     real *z;
-
-    real *r_med;
-    real *theta_med;
-    real *phi_med;
-
 
     real dummy;
 
@@ -336,12 +364,10 @@ int main(int argc, char **argv)
 
       if(data[k]>max_value) max_value = data[k];
       if(data[k]<min_value) min_value = data[k];
-
     }
 
-
-    //min_value=-16.85;
-    //max_value=-4.8;
+    if(Use_custom_min)  min_value=custom_min;
+    if(Use_custom_max)  max_value=custom_max;
 
     printf("MaxValue: %lf\n", max_value);
     printf("MinValue: %lf\n", min_value);
