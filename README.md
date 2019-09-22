@@ -1,5 +1,5 @@
 # Blender_Bvoxer
-Codes and blendfiles to use voxel data for scientific visualization in blender.
+Codes and blendfiles to use voxel data for scientific visualization in blender*.
 
 In this repository are all the files used in the tutorial series: "Blender and Astronomy Tutorial. Using Voxel Data for 3D visualization".  
 The first video tutorial: "Understanding Blender Voxel Data", uses the folder called "Example".  
@@ -11,3 +11,5 @@ Further description of the visualization procedure can be found the paper: "Voxe
 https://arxiv.org/abs/1611.06965
 
 We include a PDF with the acknowledgements to all the people that one way or another contributed to develope these video tutorials, specially to the scientists that shared their data present in this repository, and also the ones that have developed tutorials about the use of blender for scientific visualization.
+
+*Update: This method is meant for Blender version 2.79 or earlier, as newer version do not support the custom voxel data used through this tutorials.
